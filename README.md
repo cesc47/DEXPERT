@@ -16,7 +16,9 @@ This repo provides the dataset, code, and models' weights for the paper "A Trans
 
 ## DEW-B Dataset
 
-TBD
+The DEW-B (Date Estimation in the Wild - Balanced) dataset, aims to provide more training images for the years that are less represented in the [DEW dataset](https://www.radar-service.eu/radar/en/dataset/tJzxrsYUkvPklBOw), from 1930 to 1969. The contributed training data has been harvested from three sources: the [LAION-5B dataset](https://laion.ai/blog/laion-5b/), and the [Flickr](https://www.flickr.com/) and [Europeana](https://www.europeana.eu/es) web portals.
+
+Images URLs and annotation files TBD
 
 ## DEXPERT Model
 
