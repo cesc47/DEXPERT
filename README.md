@@ -13,3 +13,15 @@ This repo provides the dataset, code, and models' weights for the paper "A Trans
   organization={Springer}
 }
 ```
+
+## DEW-B Dataset
+
+TBD
+
+## DEXPERT Model
+
+The proposed DEXPERT model consists of an object detector, an ensemble of Convolutional Neural Network (CNNs) experts, and a Transformer encoder that aggregates the information from the different experts to generate a final prediction.
+
+![](./dexpert.png)
+
+Code and pre-trained weights (TDB)
