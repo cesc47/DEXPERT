@@ -35,6 +35,7 @@ These files are used to train the specialists models and then the DEXPERT. By sp
 ```
 python detr_inference.py --path_to_db <path_to_db> --folder_name <folder_name> 
 ```
+[DETR model (ResNet50)](https://huggingface.co/facebook/detr-resnet-50) is used to extract the detections. Other backbones can be used by editing the `--model_name` parameter. 
 Otherwise, **detections** can be also **downloaded** [here](https://todo).
 
 
