@@ -1,10 +1,6 @@
 import torch
 from torch import nn
 import os
-import open_clip
-import torchvision
-from datasets import DATES_ALLINONE_TEST
-import numpy as np
 
 
 def adapt_model(args, model, num_classes):
