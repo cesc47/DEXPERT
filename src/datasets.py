@@ -170,15 +170,27 @@ class DATES_ALLINONE(Dataset):
     """Date estimation in the wild dataset. Used to train the DEXPERT."""
 
     def __init__(self, args, split='train'):
-        self.root_dir = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild')
-        #self.root_dir_balanced = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild_Balanced')
+        # initialize the dataset variables
+        self.data_path = args.data_path
+        self.balanced = args.balanced
+
+        # if the dataset is balanced, load the balanced dataset
+        if self.balanced:
+            self.root_dir = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild_Balanced')
+        else:
+            self.root_dir = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild')
+
         self.split = split
-        #if self.split == 'train':
-        #    self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir_balanced, f'gt_{split}.csv'))
-        #else:
-        #    self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir, f'gt_{split}_ok.csv'))
-        self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir, f'gt_{split}_ok.csv'))
-        self.classes = 14
+        self.len_dew = 0
+
+        if self.split == 'train' and self.balanced:
+            self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir, f'gt_{split}.csv'))
+        else:
+            self.filenames, self.labels = self.load_annotations(os.path.join(self.data_path, 'Date_Estimation_in_the_Wild', f'gt_{split}_ok.csv'))
+
+        # check if the task is regression or classification and set the number of classes in function of that
+        self.regression = args.regression
+        self.classes = 1 if self.regression else 14
 
         if self.split == 'train':
             self.transforms = presets.ClassificationPresetTrain(
@@ -201,6 +213,7 @@ class DATES_ALLINONE(Dataset):
             )
 
         self.args = args
+
     def __len__(self):
         return len(self.filenames)
 
@@ -209,7 +222,6 @@ class DATES_ALLINONE(Dataset):
                                 f'{self.filenames[idx]}.jpg')
         image = Image.open(img_name).convert('RGB')
 
-        # todo: generalize for when there are more than 1 detections per specialist
         images = {
             'general': [image],
             'person': [],
@@ -233,7 +245,6 @@ class DATES_ALLINONE(Dataset):
                         if label is not None:
                             images[label].append(image.crop(
                                 (data['boxes'][j][0], data['boxes'][j][1], data['boxes'][j][2], data['boxes'][j][3])))
-
             except:
                 print('file corrupted: ' + json_filename)
 
@@ -307,15 +318,49 @@ class DATES_ALLINONE_TEST(Dataset):
     """Date estimation in the wild dataset. Used to test the DEXPERT"""
 
     def __init__(self, args, split='train'):
-        self.root_dir = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild')
-        # self.root_dir_balanced = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild_Balanced')
+        # initialize the dataset variables
+        self.data_path = args.data_path
+        self.balanced = args.balanced
+
+        # if the dataset is balanced, load the balanced dataset
+        if self.balanced:
+            self.root_dir = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild_Balanced')
+        else:
+            self.root_dir = os.path.join(args.data_path, 'Date_Estimation_in_the_Wild')
+
         self.split = split
-        # if self.split == 'train':
-        #    self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir_balanced, f'gt_{split}.csv'))
-        # else:
-        #    self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir, f'gt_{split}_ok.csv'))
-        self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir, f'gt_{split}_ok.csv'))
-        self.classes = 14
+        self.len_dew = 0
+
+        if self.split == 'train' and self.balanced:
+            self.filenames, self.labels = self.load_annotations(os.path.join(self.root_dir, f'gt_{split}.csv'))
+        else:
+            self.filenames, self.labels = self.load_annotations(
+                os.path.join(self.data_path, 'Date_Estimation_in_the_Wild', f'gt_{split}_ok.csv'))
+
+        # check if the task is regression or classification and set the number of classes in function of that
+        self.regression = args.regression
+        self.classes = 1 if self.regression else 14
+
+        if self.split == 'train':
+            self.transforms = presets.ClassificationPresetTrain(
+                crop_size=args.train_crop_size,
+                mean=(0.485, 0.456, 0.406),
+                std=(0.229, 0.224, 0.225),
+                interpolation=InterpolationMode(args.interpolation),
+                auto_augment_policy=getattr(args, "auto_augment", None),
+                random_erase_prob=getattr(args, "random_erase", 0.0),
+                ra_magnitude=getattr(args, "ra_magnitude", None),
+                augmix_severity=getattr(args, "augmix_severity", None),
+            )
+        else:
+            self.transforms = presets.ClassificationPresetEval(
+                crop_size=args.val_crop_size,
+                mean=(0.485, 0.456, 0.406),
+                std=(0.229, 0.224, 0.225),
+                resize_size=args.val_resize_size,
+                interpolation=InterpolationMode(args.interpolation)
+            )
+
         self.args = args
 
     def __len__(self):
@@ -326,7 +371,6 @@ class DATES_ALLINONE_TEST(Dataset):
                                 f'{self.filenames[idx]}.jpg')
         image = Image.open(img_name).convert('RGB')
 
-        # todo: generalize for when there are more than 1 detections per specialist
         images = {
             'general': [image],
             'person': [],
@@ -366,7 +410,6 @@ class DATES_ALLINONE_TEST(Dataset):
         """
         Custom collate_fn for the dataloader.
         """
-        # todo: fix for when a sample[0] is None
         # get the maximum number of images in a batch
         max_len = max([len(sample[0]) for sample in batch])
         # generate tuple to stack: a torch tensor with all zeros and None
