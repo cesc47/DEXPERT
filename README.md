@@ -26,8 +26,9 @@ Some of our best models are shown below (evaluated in DEW test set):
 
 ## DEW-B Dataset
 
-The DEW-B dataset, aims to provide more training images for the years that are less represented in the [DEW dataset](https://www.radar-service.eu/radar/en/dataset/tJzxrsYUkvPklBOw), from 1930 to 1969. The contributed training data has been harvested from three sources: the [LAION-5B dataset](https://laion.ai/blog/laion-5b/), and the [Flickr](https://www.flickr.com/) and [Europeana](https://www.europeana.eu/es) web portals.
+The DEW-B dataset, aims to provide more training images for the years that are less represented in the [DEW dataset](https://www.radar-service.eu/radar/en/dataset/tJzxrsYUkvPklBOw), from 1930 to 1969. The contributed training data has been harvested from three sources: the [LAION-5B dataset](https://laion.ai/blog/laion-5b/), and the [Flickr](https://www.flickr.com/) and [Europeana](https://www.europeana.eu/es) web portals. In the following image we can see the number of training images per year in the DEW-B dataset. The original DEW dataset (blue bars in the plot) was highly unbalanced, with the number of images drastically decreasing with the age of the data. Our contributed data (Flickr DEW,  Laion5B DEW, and Europeana DEW) provide more training images for the less represented years:
 
+![](fig/plot_dew_laion.png)
 
 ### Images URLs and annotation files (TBD)
 
