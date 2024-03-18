@@ -2,8 +2,6 @@
 
 [[Paper]](https://todo) [[Citations]](#citing)
 
-(Work in progress!) 
-
 This repo provides the dataset, code, and models' weights for the paper "A Transformer-based object-centric approach for date estimation of historical photographs", published in the 46th European Conference on Information Retrieval, [ECIR 2024](https://www.ecir2024.org/).
 
 The main contribution of this work are:
@@ -16,12 +14,12 @@ Some of our best models are shown below (evaluated in DEW test set):
 | **Method**                                                                                                | **Training data** | **Mean average error (MAE)** |
 |-----------------------------------------------------------------------------------------------------------|-------------------|------------------------------|
 | [Müller et al. ResNet50](https://link.springer.com/chapter/10.1007/978-3-319-56608-5_57) (classification) | DEW               | 7.12                         |
-| ConvNext-Base (WCE)                                                                                       | DEW               | 4.75                         |
-| DEXPERT                                                                                                   | DEW               | 4.55                         |
+| [ConvNext-Base (WCE)](https://huggingface.co/cesc47/DEXPERT/blob/main/convnext_DEW.pth)                   | DEW               | 4.75                         |
+| [DEXPERT](https://huggingface.co/cesc47/DEXPERT/blob/main/DEXPERT_DEW.pth)                                | DEW               | 4.55                         |
 |                                                                                                           |                   |                              |
-| ResNet50 (classification)                                                                                 | DEW-B             | 5.72                         |
-| ConvNext-Base                                                                                             | DEW-B             | 4.10                         |
-| DEXPERT                                                                                                   | DEW-B             | 4.46                         |
+| [ResNet50 (classification)](https://huggingface.co/cesc47/DEXPERT/blob/main/resnet50_DEWB.pth)                              | DEW-B             | 5.72                         |
+| [ConvNext-Base](https://huggingface.co/cesc47/DEXPERT/blob/main/convnext_DEWB.pth)                        | DEW-B             | 4.10                         |
+| [DEXPERT](https://huggingface.co/cesc47/DEXPERT/tree/main)                                                | DEW-B             | 4.46                         |
 
 
 ## DEW-B Dataset
@@ -30,8 +28,7 @@ The DEW-B dataset, aims to provide more training images for the years that are l
 
 ![](fig/plot_dew_laion.png)
 
-### Images URLs and annotation files (TBD)
-
+In order to obtain the dataset for research puroposes, feel free to contact us!
 
 
 ## DEXPERT Model
@@ -47,7 +44,7 @@ These files are used to train the specialists models and then the DEXPERT. By sp
 python detr_inference.py --path_to_db <path_to_db> --folder_name <folder_name> 
 ```
 [DETR model (ResNet50)](https://huggingface.co/facebook/detr-resnet-50) is used to extract the detections. Other backbones can be used by editing the `--model_name` parameter. 
-Otherwise, **detections** can be also **downloaded** [here](https://todo).
+Otherwise, **detections** can be also **downloaded** [here](https://huggingface.co/cesc47/DEXPERT/tree/main).
 
 ![](fig/DETR_detections.jpg)
 
@@ -73,7 +70,7 @@ python train_DEXPERT.py train_DEXPERT.py --data-path <data_path> --model convnex
 - `<balanced>`: if the dataset is DEW-B, this flag must be specified, else, it must be omitted.
 
 The other parameters are optional and can be modified, but the ones specified in the command are the ones used in the paper.
-If you want to **download** the **weights** of the DEXPERT model, you can do it [here](https://todo).
+If you want to **download** the **weights** of the DEXPERT model, you can do it [here](https://huggingface.co/cesc47/DEXPERT/tree/main).
 
 
 ## Evaluation
